@@ -2,8 +2,8 @@
 
 namespace Zhouzishu\LaravelSms;
 
-use Illuminate\Support\ServiceProvider;
 use Overtrue\EasySms\EasySms;
+use Illuminate\Support\ServiceProvider;
 
 class SmsManagerServiceProvider extends ServiceProvider
 {
@@ -13,18 +13,18 @@ class SmsManagerServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../config/laravel-sms.php' => config_path('laravel-sms.php'),
+            __DIR__.'/../config/laravel-sms.php' => config_path('laravel-sms.php'),
         ], 'config');
 
         $this->publishes([
-            __DIR__ . '/../migrations/' => database_path('/migrations'),
+            __DIR__.'/../migrations/' => database_path('/migrations'),
         ], 'migrations');
 
         if (config('laravel-sms.route.enable', true)) {
-            require __DIR__ . '/routes.php';
+            require __DIR__.'/routes.php';
         }
 
-        require __DIR__ . '/validations.php';
+        require __DIR__.'/validations.php';
     }
 
     /**
@@ -32,7 +32,7 @@ class SmsManagerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/laravel-sms.php', 'laravel-sms');
+        $this->mergeConfigFrom(__DIR__.'/../config/laravel-sms.php', 'laravel-sms');
 
         $this->app->singleton('Zhouzishu\\LaravelSms\\SmsManager', function ($app) {
             $token = $app->request->header('access-token', null);
