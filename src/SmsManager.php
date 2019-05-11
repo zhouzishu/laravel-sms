@@ -5,7 +5,6 @@ namespace Zhouzishu\LaravelSms;
 use URL;
 use Validator;
 use Overtrue\EasySms\EasySms;
-use Overtrue\EasySms\Contracts\MessageInterface;
 use Overtrue\EasySms\Exceptions\NoGatewayAvailableException;
 
 class SmsManager
@@ -23,14 +22,14 @@ class SmsManager
     const closurePattern = '/(SuperClosure\\\SerializableClosure)+/';
 
     /**
-     * 存储器
+     * 存储器.
      *
      * @var Storage
      */
     protected static $storage;
 
     /**
-     * Access Token
+     * Access Token.
      *
      * @var string|null
      */
@@ -44,21 +43,21 @@ class SmsManager
     protected $state = [];
 
     /**
-     * 客户端数据
+     * 客户端数据.
      *
      * @var array
      */
     protected $input = [];
 
     /**
-     * EasySMS
+     * EasySMS.
      *
      * @var EasySMS
      */
     protected $easySms;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param string|null $token
      * @param array       $input
@@ -107,7 +106,7 @@ class SmsManager
     }
 
     /**
-     * 验证数据
+     * 验证数据.
      *
      * @param mixed         $input
      * @param \Closure|null $validation
@@ -128,7 +127,7 @@ class SmsManager
         $fields = self::getFields();
         foreach ($fields as $field) {
             if (self::whetherValidateFiled($field)) {
-                $ruleName = $this->input($field . '_rule');
+                $ruleName = $this->input($field.'_rule');
                 $rules[$field] = $this->getRealRuleByName($field, $ruleName);
             }
         }
@@ -158,7 +157,7 @@ class SmsManager
     }
 
     /**
-     * 根据规则名获取真实的验证规则
+     * 根据规则名获取真实的验证规则.
      *
      * - 首先尝试使用指定名称的静态验证规则
      * - 其次尝试使用指定名称的动态验证规则
@@ -171,7 +170,7 @@ class SmsManager
      */
     protected function getRealRuleByName($field, $ruleName)
     {
-        if (empty($ruleName) || !is_string($ruleName)) {
+        if (empty($ruleName) || ! is_string($ruleName)) {
             $ruleName = Util::pathOfUrl(URL::previous());
         }
         if ($staticRule = $this->getStaticRule($field, $ruleName)) {
@@ -195,7 +194,7 @@ class SmsManager
     }
 
     /**
-     * 设置指定字段使用的验证规则名称
+     * 设置指定字段使用的验证规则名称.
      *
      * @param string $field
      * @param string $name
@@ -206,7 +205,7 @@ class SmsManager
     }
 
     /**
-     * 获取设置指定字段使用的验证规则名称
+     * 获取设置指定字段使用的验证规则名称.
      *
      * @param string $field
      *
@@ -228,7 +227,7 @@ class SmsManager
             config('laravel-sms.code.repeatIfValid', false));
         if ($repeatIfValid) {
             $state = $this->retrieveState();
-            if (!(empty($state)) && $state['deadline'] >= time() + 60) {
+            if (! (empty($state)) && $state['deadline'] >= time() + 60) {
                 return $state['code'];
             }
         }
@@ -255,16 +254,16 @@ class SmsManager
         $code = $this->verifyCode();
         $for = $this->input(self::getMobileField());
 
-		$message = new Message($code, $minutes, $data);
-        
+        $message = new Message($code, $minutes, $data);
+
         try {
             $result = $this->send($for, $message);
         } catch (NoGatewayAvailableException $noGatewayAvailableException) {
-			return self::generateResult(false, 'sms_sent_failure');
-		} catch (\Exception $exception) {
-			return self::generateResult(false, 'sms_sent_failure');
-		}
-        
+            return self::generateResult(false, 'sms_sent_failure');
+        } catch (\Exception $exception) {
+            return self::generateResult(false, 'sms_sent_failure');
+        }
+
         if ($result === null || $result === true || is_array($result)) {
             $this->state['sent'] = true;
             $this->state['to'] = $for;
@@ -280,7 +279,7 @@ class SmsManager
     }
 
     /**
-     * 获取当前的发送状态(非持久化的)
+     * 获取当前的发送状态(非持久化的).
      *
      * @param string|int|null $key
      * @param mixed           $default
@@ -297,7 +296,7 @@ class SmsManager
     }
 
     /**
-     * 获取客户端数据
+     * 获取客户端数据.
      *
      * @param string|int|null $key
      * @param mixed           $default
@@ -382,7 +381,7 @@ class SmsManager
     }
 
     /**
-     * 从存储器中获取可再次发送的截止时间
+     * 从存储器中获取可再次发送的截止时间.
      *
      * @return int
      */
@@ -394,7 +393,7 @@ class SmsManager
     }
 
     /**
-     * 存储指定字段的指定名称的动态验证规则
+     * 存储指定字段的指定名称的动态验证规则.
      *
      * @param string      $field
      * @param string      $name
@@ -416,7 +415,7 @@ class SmsManager
             $rule = $name;
             $name = null;
         }
-        if (empty($name) || !is_string($name)) {
+        if (empty($name) || ! is_string($name)) {
             $name = Util::pathOfUrl(URL::current(), function ($e) use ($field) {
                 throw new LaravelSmsException("Expected a name for the dynamic rule which belongs to field `$field`.");
             });
@@ -428,7 +427,7 @@ class SmsManager
     }
 
     /**
-     * 从存储器中获取指定字段的指定名称的动态验证规则
+     * 从存储器中获取指定字段的指定名称的动态验证规则.
      *
      * @param string      $field
      * @param string|null $name
@@ -447,7 +446,7 @@ class SmsManager
     }
 
     /**
-     * 从存储中获取指定字段的所有验证规则
+     * 从存储中获取指定字段的所有验证规则.
      *
      * @param string $field
      *
@@ -459,7 +458,7 @@ class SmsManager
     }
 
     /**
-     * 从存储器中删除指定字段的指定名称的动态验证规则
+     * 从存储器中删除指定字段的指定名称的动态验证规则.
      *
      * @param string      $field
      * @param string|null $name
@@ -467,9 +466,9 @@ class SmsManager
     public function forgetRule($field, $name = null)
     {
         $allRules = [];
-        if (!(empty($name))) {
+        if (! (empty($name))) {
             $allRules = $this->retrieveRules($field);
-            if (!isset($allRules[$name])) {
+            if (! isset($allRules[$name])) {
                 return;
             }
             unset($allRules[$name]);
@@ -479,7 +478,7 @@ class SmsManager
     }
 
     /**
-     * 从存储中获取指定字段的所有验证规则
+     * 从存储中获取指定字段的所有验证规则.
      *
      * @param string $field
      *
@@ -491,7 +490,7 @@ class SmsManager
     }
 
     /**
-     * 从存储器中获取用户的所有数据
+     * 从存储器中获取用户的所有数据.
      *
      * @return array
      */
@@ -510,7 +509,7 @@ class SmsManager
     }
 
     /**
-     * 生成key
+     * 生成key.
      *
      * @return string
      */
@@ -523,15 +522,15 @@ class SmsManager
         $args = array_filter($args, function ($value) {
             return $value && is_string($value);
         });
-        if (!(empty($args))) {
-            $prefix .= $split . implode($split, $args);
+        if (! (empty($args))) {
+            $prefix .= $split.implode($split, $args);
         }
 
         return $prefix;
     }
 
     /**
-     * 生成验证码短信通用内容
+     * 生成验证码短信通用内容.
      *
      * @param string $code
      * @param int    $minutes
@@ -552,7 +551,7 @@ class SmsManager
     }
 
     /**
-     * 获取可验证的字段
+     * 获取可验证的字段.
      *
      * @return array
      */
@@ -562,7 +561,7 @@ class SmsManager
     }
 
     /**
-     * 获取手机号的字段名
+     * 获取手机号的字段名.
      *
      * @throws LaravelSmsException
      *
@@ -572,7 +571,7 @@ class SmsManager
     {
         $config = config('laravel-sms.validation', []);
         foreach ($config as $key => $value) {
-            if (!is_array($value)) {
+            if (! is_array($value)) {
                 continue;
             }
             if (isset($value['isMobile']) && $value['isMobile']) {
@@ -583,7 +582,7 @@ class SmsManager
     }
 
     /**
-     * 获取存储器
+     * 获取存储器.
      *
      * @throws LaravelSmsException
      *
@@ -595,11 +594,11 @@ class SmsManager
             return self::$storage;
         }
         $className = self::getStorageClassName();
-        if (!class_exists($className)) {
+        if (! class_exists($className)) {
             throw new LaravelSmsException("Generate storage failed, the class [$className] does not exists.");
         }
         $store = new $className();
-        if (!($store instanceof Storage)) {
+        if (! ($store instanceof Storage)) {
             throw new LaravelSmsException("Generate storage failed, the class [$className] does not implement the interface [Zhouzishu\\LaravelSms\\Storage].");
         }
 
@@ -607,7 +606,7 @@ class SmsManager
     }
 
     /**
-     * 获取存储器类名
+     * 获取存储器类名.
      *
      * @return string
      */
@@ -629,7 +628,7 @@ class SmsManager
     }
 
     /**
-     * 是否检查指定的数据
+     * 是否检查指定的数据.
      *
      * @param string $field
      *
@@ -643,7 +642,7 @@ class SmsManager
     }
 
     /**
-     * 获取指定字段的指定名称的静态验证规则
+     * 获取指定字段的指定名称的静态验证规则.
      *
      * @param $field
      * @param $ruleName
@@ -658,7 +657,7 @@ class SmsManager
     }
 
     /**
-     * 获取指定字段的默认静态规则的名称
+     * 获取指定字段的默认静态规则的名称.
      *
      * @param string $field
      *
@@ -672,7 +671,7 @@ class SmsManager
     }
 
     /**
-     * 获取验证配置
+     * 获取验证配置.
      *
      * @param string $field
      *
@@ -690,7 +689,7 @@ class SmsManager
     }
 
     /**
-     * 检查字段名称是否合法
+     * 检查字段名称是否合法.
      *
      * @param $name
      *
@@ -699,7 +698,7 @@ class SmsManager
     protected static function validateFieldName($name)
     {
         $fields = self::getFields();
-        if (!in_array($name, $fields)) {
+        if (! in_array($name, $fields)) {
             $names = implode(', ', $fields);
             throw new LaravelSmsException("Illegal field `$name`, the field name must be one of $names.");
         }
@@ -720,7 +719,7 @@ class SmsManager
         $characters = (string) ($characters ?: '0123456789');
         $charLength = strlen($characters);
         $randomString = '';
-        for ($i = 0; $i < $length; ++$i) {
+        for ($i = 0; $i < $length; $i++) {
             $randomString .= $characters[mt_rand(0, $charLength - 1)];
         }
 
@@ -728,7 +727,7 @@ class SmsManager
     }
 
     /**
-     * 从配置文件获取验证码有效时间(分钟)
+     * 从配置文件获取验证码有效时间(分钟).
      *
      * @return int
      */
@@ -739,7 +738,7 @@ class SmsManager
     }
 
     /**
-     * 从配置文件获取提示信息
+     * 从配置文件获取提示信息.
      *
      * @param string $name
      *
@@ -756,7 +755,7 @@ class SmsManager
     }
 
     /**
-     * 从配置文件获取可再次请求的最小时间间隔(秒)
+     * 从配置文件获取可再次请求的最小时间间隔(秒).
      *
      * @return int
      */
@@ -766,7 +765,7 @@ class SmsManager
     }
 
     /**
-     * 合成结果数组
+     * 合成结果数组.
      *
      * todo 改为抛出异常,然后在控制器中catch
      *
@@ -793,7 +792,7 @@ class SmsManager
     }
 
     /**
-     * 序列化闭包
+     * 序列化闭包.
      *
      * @param \Closure $closure
      *

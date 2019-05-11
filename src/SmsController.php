@@ -2,20 +2,20 @@
 
 namespace Zhouzishu\LaravelSms;
 
-use Illuminate\Routing\Controller;
 use SmsManager as Manager;
+use Illuminate\Routing\Controller;
 
 class SmsController extends Controller
 {
     public function postSendCode()
     {
         $res = Manager::validateSendable();
-        if (!$res['success']) {
+        if (! $res['success']) {
             return response()->json($res);
         }
 
         $res = Manager::validateFields();
-        if (!$res['success']) {
+        if (! $res['success']) {
             return response()->json($res);
         }
 
