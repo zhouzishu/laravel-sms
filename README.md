@@ -30,7 +30,7 @@
 在项目根目录下运行如下composer命令:
 ```php
 //推荐
-composer require zhouzishu/laravel-sms:~2.6
+composer require zhouzishu/laravel-sms
 
 //安装开发中版本
 composer require zhouzishu/laravel-sms:dev-master
