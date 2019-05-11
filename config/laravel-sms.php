@@ -119,9 +119,7 @@ return [
     | 如果已在EasySms配置项配置signature或者使用模板id方式发送则不需要
     |
     */
-    'content' => function ($code, $minutes, $input) {
-        return '【signature】您的验证码是'.$code.'，有效期为'.$minutes.'分钟，请尽快验证。';
-    },
+    'content' => '您的验证码是%s。如非本人操作，请忽略本短信',
 
     /*
     |--------------------------------------------------------------------------
