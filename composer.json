@@ -1,0 +1,38 @@
+{
+    "name": "zhouzishu/laravel-sms",
+    "description": "A mobile phone number validation solution based on laravel",
+    "license": "MIT",
+    "keywords": ["sms", "mobile", "phone", "laravel", "laravel-sms", "easy-sms"],
+    "authors": [
+        {
+            "name": "toplan",
+            "email": "toplan710@gmail.com"
+        },
+        {
+            "name": "zhouzishu",
+            "email": "2693558149@qq.com"
+        }
+    ],
+    "require": {
+        "illuminate/support": "^5.1",
+        "overtrue/easy-sms": "^1.1"
+    },
+    "autoload": {
+        "classmap": [
+            "src/"
+        ],
+        "psr-0": {
+            "Zhouzishu\\LaravelSms": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Zhouzishu\\LaravelSms\\SmsManagerServiceProvider"
+            ],
+            "aliases": {
+                "SmsManager": "Zhouzishu\\LaravelSms\\Facades\\SmsManager"
+            }
+        }
+    }
+}
